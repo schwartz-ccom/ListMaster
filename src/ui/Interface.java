@@ -1,22 +1,20 @@
 package ui;
 
-import res.Benchmarker;
-import res.Constants;
-import res.FileHandler;
-import res.Out;
+import res.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
 
 // The main class responsible for the user interface
 public class Interface {
 
     // Class Variables
     private String id = this.getClass().getSimpleName();
-
+    private String lastLocationForFile = System.getProperty( "user.home" );
     // Constructors
     public Interface() {
         try {
@@ -152,14 +150,14 @@ public class Interface {
         JPanel southPanel = new JPanel( new BorderLayout() );
         southPanel.setBorder( BorderFactory.createEmptyBorder( 4, 4, 4, 4 ) );
 
-        String[] colNames = new String[]{ "Date", "Name", "Steward", "Room", "S/N" };
+        String[] colNames = new String[]{ "Category", "Name", "Make", "Model", "Steward", "Room", "S/N" };
 
-        DefaultTableModel tbl = new DefaultTableModel( 20, colNames.length );
+        DefaultTableModel tbl = new DefaultTableModel( 0, colNames.length );
 
         JTable tblInfo = new JTable( tbl );
         tblInfo.setCellSelectionEnabled( true );
         tbl.setColumnIdentifiers( colNames );
-        tbl.setValueAt( "Test", 1, 1 );
+        DataHandler.getInstance().setTable( tblInfo );
 
         JScrollPane sp = new JScrollPane( tblInfo );
         southPanel.add( sp, BorderLayout.CENTER );
@@ -183,6 +181,7 @@ public class Interface {
             openFile.setDialogTitle( "Open MCL List" );
             openFile.setFileSelectionMode( JFileChooser.FILES_ONLY );
             openFile.setDragEnabled( true );
+            openFile.setCurrentDirectory( new File( lastLocationForFile ) );
             openFile.setMultiSelectionEnabled( false );
 
             // Create a file name filter, so that only .csv types can be chosen
@@ -193,10 +192,29 @@ public class Interface {
             // If the user selects alright.
             // If not, keep using whatever file we were working with.
             if ( status == JFileChooser.APPROVE_OPTION ) {
+                lastLocationForFile = openFile.getCurrentDirectory().getAbsolutePath();
                 FileHandler.getInstance().setWorkingFile( openFile.getSelectedFile() );
                 FileHandler.getInstance().processNewFile();
             }
         } );
+
+        btnSearch.addActionListener( actionEvent -> {
+            String[] toFilterBy = new String[ 4 ];
+            toFilterBy[ 0 ] = String.valueOf( cbxTypes.getSelectedIndex() );
+            toFilterBy[ 1 ] = txtName.getText();
+            toFilterBy[ 2 ] = txtSteward.getText();
+            toFilterBy[ 3 ] = txtSN.getText();
+
+            DataHandler.getInstance().refreshTable( toFilterBy );
+        });
+
+        btnClear.addActionListener( actionEvent -> {
+            txtName.setText( "" );
+            txtSteward.setText( "" );
+            txtSN.setText( "" );
+            cbxTypes.setSelectedIndex( 0 );
+            DataHandler.getInstance().refreshTable();
+        });
     }
 
 }

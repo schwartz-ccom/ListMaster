@@ -9,7 +9,7 @@ public class Benchmarker {
     }
 
     public static void stop( String what ){
-        System.out.println( what.trim() + " took " + ( System.currentTimeMillis() - time ) + "ms to finish" );
+        Out.printInfo( "Benchmarker", what.trim() + " took " + ( System.currentTimeMillis() - time ) + "ms to finish" );
         time = 0;
     }
 }

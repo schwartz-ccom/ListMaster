@@ -5,7 +5,14 @@ import res.Constants;
 public class EntryFactory {
 
     public static Entry createEntry( String line ) {
-        String[] parts = line.split( "," );
+
+        // Use a negative value on split so it doesn't remove empty strings.
+        String[] parts = line.split( ",", -1 );
+        for ( int x = 0; x < parts.length; x++ ){
+            if ( parts[ x ] == null || parts[ x ].isEmpty() ){
+                parts[ x ] = "";
+            }
+        }
 
         int type = 0;
 
@@ -50,7 +57,7 @@ public class EntryFactory {
 
         toRet.setComment( parts[ 9 ] );
         toRet.setFound( false );
-        toRet.setIDs( parts[ 10 ], Integer.valueOf( parts[ 11 ] ) );
+        toRet.setIDs( parts[ 10 ], parts[ 11 ] );
         toRet.setDates( parts[ 12 ], parts[ 13 ] );
         toRet.setOperatingSystem( parts[ 14 ] );
         return toRet;

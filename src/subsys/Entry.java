@@ -4,6 +4,8 @@ import res.Benchmarker;
 import res.Constants;
 import res.Out;
 
+import java.util.Arrays;
+
 public class Entry {
 
 //------ Private data members
@@ -24,7 +26,7 @@ public class Entry {
     private String serialNumber = "";
     private String comment = "";
     private String docasset = "";
-    private int unhid = 0;
+    private String unhid = "";
     private String purchaseDate = "";
     private String warrantyExpireDate = "";
     private String OSLicenseSticker = "";
@@ -36,7 +38,7 @@ public class Entry {
      * Defaults everything to blank.
      */
     public Entry() {
-        Out.printInfo( id, "Created blank entry" );
+
     }
 
     /**
@@ -63,9 +65,6 @@ public class Entry {
         this.serialNumber = sn;
         this.make = m;
         this.model = mo;
-
-
-        Out.printInfo( id, "Created entry with details!" );
     }
 
 //------ Functions
@@ -99,7 +98,7 @@ public class Entry {
      * @param UNHID    The UNH ID
      * @param docAsset The Doc Asset Tag associated with it
      */
-    public void setIDs( String docAsset, int UNHID ) {
+    public void setIDs( String docAsset, String UNHID ) {
         this.docasset = docAsset;
         this.unhid = UNHID;
     }
@@ -127,7 +126,33 @@ public class Entry {
     }
 
     /**
-     * getDetails
+     * getType
+     * Returns the raw type of the entry
+     *
+     * @return type as int
+     */
+    public int getType() {
+        return this.type;
+    }
+
+    /**
+     * getBasicDetails
+     * Get just the basic details for the JTable
+     */
+    public String[] getBasicDetails() {
+        String[] basic = new String[ 7 ];
+        basic[ 0 ] = typeToString( this.type );
+        basic[ 1 ] = this.name;
+        basic[ 2 ] = this.make;
+        basic[ 3 ] = this.model;
+        basic[ 4 ] = this.steward;
+        basic[ 5 ] = this.room;
+        basic[ 6 ] = this.serialNumber;
+        return basic;
+    }
+
+    /**
+     * getAllDetails
      * Get's all the details of the entry and returns it as a string array.
      * element[ 0 ] = Found
      * element[ 1 ] = Date
@@ -148,7 +173,7 @@ public class Entry {
      *
      * @return String[] with all these details
      */
-    public String[] getDetails() {
+    public String[] getAllDetails() {
 
         Benchmarker.start();
 
@@ -175,12 +200,59 @@ public class Entry {
         return toRet;
     }
 
+    private String typeToString( int t ) {
+        switch ( t ) {
+            case 1:
+                return "Camera";
+            case 2:
+                return "Desktop";
+            case 3:
+                return "Display";
+            case 4:
+                return "Laptop";
+            case 5:
+                return "Network";
+            case 6:
+                return "Phone";
+            case 7:
+                return "Printer";
+            case 8:
+                return "Projector";
+            case 9:
+                return "Scanner";
+            case 10:
+                return "Server";
+            case 11:
+                return "Storage";
+            case 12:
+                return "Tablet";
+            case 13:
+                return "Other";
+            default:
+                return "UNKNOWN TYPE";
+        }
+    }
+
+    public String getSN() {
+        return this.serialNumber;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        // If o is an Entry, get it's S/N and compare it to this one's SN
+
+        if ( o instanceof Entry )
+            return ( ( Entry ) o ).getSN().equals( this.getSN() );
+        return false;
+    }
+
     public String toString() {
 
         String nline = "\n";
 
         StringBuilder sb = new StringBuilder();
         sb.append( "-----------------------------" );
+        sb.append( nline );
 
         sb.append( "Entry - " );
         sb.append( this.name );
@@ -195,7 +267,7 @@ public class Entry {
         sb.append( nline );
 
         sb.append( "Type - " );
-        sb.append( this.type );
+        sb.append( typeToString( this.type ) );
         sb.append( nline );
 
         sb.append( "Device Name - " );

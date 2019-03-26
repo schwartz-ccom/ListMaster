@@ -46,14 +46,16 @@ public class FileHandler {
             return;
         }
 
+        // Ignore first line, which contains column headers for now. I'll expand it to include
+        // col headers soon.
         boolean isFirst = true;
+
         // Read through it, and on every new line, submit the line to the EntryFactory.
         try {
             sb = new StringBuilder();
             while ( f.ready() ) {
                 char c = ( char ) f.read();
                 if ( c == '\n' ) {
-                    Out.printInfo( id, "NEW LINE DETECTED" );
                     if ( !isFirst )
                         DataHandler.getInstance().submit( sb.toString() );
                     else
@@ -63,6 +65,7 @@ public class FileHandler {
                 else
                     sb.append( c );
             }
+            DataHandler.getInstance().refreshTable();
         } catch ( IOException ioe ) {
             Out.printError( id, "There was an error reading the file: " + ioe.getMessage() );
         }
