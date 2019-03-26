@@ -1,6 +1,9 @@
 package res;
 
-// A simple way to measure how long certain functions or spots of code take to run
+/**
+ * Benchmarker
+ * A simple way to measure how long certain functions or spots of code take to run
+ */
 public class Benchmarker {
     private static long time = 0;
 

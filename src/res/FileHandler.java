@@ -5,6 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * FileHandler
+ * Handles everything related the file opening or saving.
+ * Works with the Interface when the OpenFile dialog appears, and
+ * when a refresh is called.
+ */
 public class FileHandler {
 
     private File file;
@@ -33,7 +39,7 @@ public class FileHandler {
         file = toWorkWith;
     }
 
-    public void processNewFile() {
+    public void processFile() {
         FileReader f;
         StringBuilder sb;
 

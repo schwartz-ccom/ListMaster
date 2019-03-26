@@ -8,6 +8,12 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * DataHandler
+ * Handles all the data sent to it by the FileHandler
+ * It's responsible for manipulating the data in the table,
+ * as well as providing sorting / searching functionality
+ */
 public class DataHandler {
 
     private ArrayList< Entry > entries = new ArrayList<>();
@@ -24,6 +30,10 @@ public class DataHandler {
         if ( instance == null )
             instance = new DataHandler();
         return instance;
+    }
+    public void reset(){
+        entries.clear();
+        removeAllRows();
     }
 
     public void submit( String line ) {
@@ -52,10 +62,15 @@ public class DataHandler {
         // Filters 2 = Steward
         // Filters 3 = S/N
 
+        // Go through each filter and remove all unnecessary things
         Iterator< Entry > it = filtered.iterator();
         while ( it.hasNext() ){
-            if ( it.next().getType() != Integer.valueOf( filters[ 0 ] ) )
-                it.remove();
+            if ( Integer.valueOf( filters[ 0 ] ) != 0 ){
+                if ( it.next().getType() != Integer.valueOf( filters[ 0 ] ) )
+                    it.remove();
+            }
+            else
+                it.next();
         }
         if ( !filters[ 1 ].isEmpty() ) {
             it = filtered.iterator();
@@ -80,7 +95,7 @@ public class DataHandler {
                     it.remove();
             }
         }
-        Benchmarker.stop( "Filtering with " + filters.length + " filters" );
+        Benchmarker.stop( "Filtering results" );
         displayElements( filtered );
     }
 

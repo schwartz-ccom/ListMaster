@@ -1,11 +1,12 @@
 package subsys;
 
 import res.Benchmarker;
-import res.Constants;
-import res.Out;
 
-import java.util.Arrays;
-
+/**
+ * Entry
+ * This keeps track of all the Entries from the csv and whatnot.
+ * Provides a data member for the entries, as well as getters / setters
+ */
 public class Entry {
 
 //------ Private data members

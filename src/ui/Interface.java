@@ -9,12 +9,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 
-// The main class responsible for the user interface
+/**
+ * Interface
+ * The main class responsible for the user interface
+ */
 public class Interface {
 
     // Class Variables
     private String id = this.getClass().getSimpleName();
     private String lastLocationForFile = System.getProperty( "user.home" );
+    private String lastFileLocation = "";
     // Constructors
     public Interface() {
         try {
@@ -194,8 +198,13 @@ public class Interface {
             if ( status == JFileChooser.APPROVE_OPTION ) {
                 lastLocationForFile = openFile.getCurrentDirectory().getAbsolutePath();
                 FileHandler.getInstance().setWorkingFile( openFile.getSelectedFile() );
-                FileHandler.getInstance().processNewFile();
+                FileHandler.getInstance().processFile();
             }
+        } );
+
+        itemRefreshList.addActionListener( actionEvent -> {
+            DataHandler.getInstance().reset();
+            FileHandler.getInstance().processFile();
         } );
 
         btnSearch.addActionListener( actionEvent -> {

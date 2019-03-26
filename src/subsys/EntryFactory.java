@@ -2,6 +2,10 @@ package subsys;
 
 import res.Constants;
 
+/**
+ * EntryFactory
+ * Creates the entry with a supplied line from a csv. Used only in FileHandler often
+ */
 public class EntryFactory {
 
     public static Entry createEntry( String line ) {
