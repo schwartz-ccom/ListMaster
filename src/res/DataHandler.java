@@ -6,6 +6,7 @@ import subsys.EntryFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class DataHandler {
 
@@ -45,28 +46,42 @@ public class DataHandler {
     public void refreshTable( String[] filters ) {
         // If there are any sorting filters, use this.
         Benchmarker.start();
-        ArrayList< Entry > filteredInverted = new ArrayList<>();
+        ArrayList< Entry > filtered = new ArrayList<>( getEntries() );
         // Filters 0 = Category
         // Filters 1 = Name
         // Filters 2 = Steward
         // Filters 3 = S/N
 
-        for ( Entry test : getEntries() ) {
-            if ( filters[ 0 ].equals( "0" ) || test.getType() == Integer.valueOf( filters[ 0 ] ) )
-                filteredInverted.add( test );
-            else if ( !filters[ 1 ].equals( "" ) && test.getBasicDetails()[ 1 ].equals( filters[ 1 ] ) )
-                filteredInverted.add( test );
-            else if ( !filters[ 2 ].equals( "" ) && test.getBasicDetails()[ 4 ].equals( filters[ 2 ] ) )
-                filteredInverted.add( test );
-            else if ( !filters[ 3 ].equals( "" ) && test.getBasicDetails()[ 6 ].equals( filters[ 3 ] ) )
-                filteredInverted.add( test );
+        Iterator< Entry > it = filtered.iterator();
+        while ( it.hasNext() ){
+            if ( it.next().getType() != Integer.valueOf( filters[ 0 ] ) )
+                it.remove();
+        }
+        if ( !filters[ 1 ].isEmpty() ) {
+            it = filtered.iterator();
+            while ( it.hasNext() ) {
+                if ( !it.next().getBasicDetails()[ 1 ].equals( filters[ 1 ] ) )
+                    it.remove();
+            }
         }
 
-        ArrayList< Entry > sorted = new ArrayList<>( getEntries() );
-        sorted.removeAll( filteredInverted );
+        if ( !filters[ 2 ].isEmpty() ) {
+            it = filtered.iterator();
+            while ( it.hasNext() ) {
+                if ( !it.next().getBasicDetails()[ 4 ].equals( filters[ 2 ] ) )
+                    it.remove();
+            }
+        }
 
+        if ( !filters[ 3 ].isEmpty() ) {
+            it = filtered.iterator();
+            while ( it.hasNext() ) {
+                if ( !it.next().getBasicDetails()[ 6 ].equals( filters[ 3 ] ) )
+                    it.remove();
+            }
+        }
         Benchmarker.stop( "Filtering with " + filters.length + " filters" );
-        displayElements( sorted );
+        displayElements( filtered );
     }
 
     private void displayElements( ArrayList< Entry > toList ) {
