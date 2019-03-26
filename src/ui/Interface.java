@@ -18,7 +18,9 @@ public class Interface {
     // Class Variables
     private String id = this.getClass().getSimpleName();
     private String lastLocationForFile = System.getProperty( "user.home" );
-    private String lastFileLocation = "";
+
+    private static int formVersion = 0;
+
     // Constructors
     public Interface() {
         try {
@@ -69,7 +71,11 @@ public class Interface {
         menuFile.add( itemSettings );
         menuFile.add( itemExit );
 
+        JMenuItem itemReshowSearch = new JMenuItem( "Hide Search / Sort" );
+
         bar.add( menuFile );
+        bar.add( itemReshowSearch );
+
         frm.setJMenuBar( bar );
 
         // Then the north panel with the search fields
@@ -86,7 +92,6 @@ public class Interface {
         cc.gridx = 0;
         cc.gridy = 0;
         northPanel.add( lblType, cc );
-
 
         String[] options = { "All",
                 "Camera",
@@ -173,7 +178,6 @@ public class Interface {
         Benchmarker.stop( "Creating GUI" );
         frm.repaint();
 
-
         // Add actionListeners and whatnot to elements, now that everything is defined.
         itemOpenList.addActionListener( actionEvent -> {
             // Open a dialog asking for .CSV values.
@@ -205,6 +209,24 @@ public class Interface {
         itemRefreshList.addActionListener( actionEvent -> {
             DataHandler.getInstance().reset();
             FileHandler.getInstance().processFile();
+        } );
+
+        itemReshowSearch.addActionListener( actionEvent -> {
+            if ( formVersion == 0) {
+                frm.remove( northPanel );
+                itemReshowSearch.setText( "Show Search / Sort" );
+                formVersion = 1;
+            }
+            else if ( formVersion == 1 ){
+                frm.add( northPanel );
+                itemReshowSearch.setText( "Hide Search / Sort" );
+                formVersion = 0;
+            }
+            northPanel.revalidate();
+            northPanel.repaint();
+            southPanel.revalidate();
+            southPanel.repaint();
+            frm.repaint();
         } );
 
         btnSearch.addActionListener( actionEvent -> {
