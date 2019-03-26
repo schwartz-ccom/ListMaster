@@ -218,7 +218,7 @@ public class Interface {
                 formVersion = 1;
             }
             else if ( formVersion == 1 ){
-                frm.add( northPanel );
+                frm.add( northPanel, BorderLayout.NORTH  );
                 itemReshowSearch.setText( "Hide Search / Sort" );
                 formVersion = 0;
             }
