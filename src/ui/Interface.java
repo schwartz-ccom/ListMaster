@@ -7,6 +7,9 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
 import java.io.File;
 
 /**
@@ -55,7 +58,7 @@ public class Interface {
         // Start from top to bottom for GUI creation, beginning with the Menu
         JMenuBar bar = new JMenuBar();
 
-        JMenu menuFile = new JMenu( "File" );
+        JMenu menuFile = new JMenu( "List Settings" );
 
         JMenuItem itemNewList = new JMenuItem( "New List" );
         JMenuItem itemOpenList = new JMenuItem( "Open List" );
@@ -210,7 +213,11 @@ public class Interface {
             DataHandler.getInstance().reset();
             FileHandler.getInstance().processFile();
         } );
-
+        
+        itemSettings.addActionListener( actionEvent -> {
+            
+        } );
+        
         itemReshowSearch.addActionListener( actionEvent -> {
             if ( formVersion == 0) {
                 frm.remove( northPanel );
@@ -246,6 +253,9 @@ public class Interface {
             cbxTypes.setSelectedIndex( 0 );
             DataHandler.getInstance().refreshTable();
         });
+        
+        frm.setMinimumSize( new Dimension( 650, 600 ) );
+        frm.repaint();
     }
 
 }

@@ -12,37 +12,37 @@ import java.io.IOException;
  * when a refresh is called.
  */
 public class FileHandler {
-
+    
     private File file;
     private String id = this.getClass().getSimpleName();
-
+    
     private static FileHandler instance;
-
+    
     public static FileHandler getInstance() {
         if ( instance == null )
             instance = new FileHandler();
         return instance;
     }
-
+    
     private FileHandler() {
-
+    
     }
-
+    
     public File getWorkingFile() {
         return file;
     }
-
+    
     public void setWorkingFile( File toWorkWith ) {
         if ( file != null ) {
             Out.printError( id, "Warning: Resetting current working file to something else!" );
         }
         file = toWorkWith;
     }
-
+    
     public void processFile() {
         FileReader f;
         StringBuilder sb;
-
+        
         // Try to see if we can initialize the file in the first place before doing anything else
         // This prevents issues like the user deleting the file after they select it.
         try {
@@ -51,11 +51,11 @@ public class FileHandler {
             Out.printError( id, "There was an issue getting the file: " + fnfe.getMessage() );
             return;
         }
-
+        
         // Ignore first line, which contains column headers for now. I'll expand it to include
         // col headers soon.
         boolean isFirst = true;
-
+        
         // Read through it, and on every new line, submit the line to the EntryFactory.
         try {
             sb = new StringBuilder();
@@ -67,8 +67,7 @@ public class FileHandler {
                     else
                         isFirst = false;
                     sb = new StringBuilder();
-                }
-                else
+                } else
                     sb.append( c );
             }
             DataHandler.getInstance().refreshTable();
