@@ -27,8 +27,20 @@ public class FileHandler {
     private FileHandler() {
     
     }
-    
-    public File getWorkingFile() {
+
+    public void getDefaultDocumentsList(){
+        File dir;
+
+        Out.printInfo( id, "OS Name: " + System.getProperty( "os.name" ) );
+        if ( System.getProperty( "os.name" ).contains( "Linux" ) ) {
+            dir = new File( System.getProperty( "user.home" ) + "/Documents" );
+        }
+        else
+            dir = new File( System.getProperty( "user.home" ) + "\\Documents" );
+        Out.printInfo( id, "Path: " + dir.getAbsolutePath() );
+    }
+
+    private File getWorkingFile() {
         return file;
     }
     

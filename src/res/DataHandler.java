@@ -75,7 +75,8 @@ public class DataHandler {
         if ( !filters[ 1 ].isEmpty() ) {
             it = filtered.iterator();
             while ( it.hasNext() ) {
-                if ( !it.next().getBasicDetails()[ 1 ].equals( filters[ 1 ] ) )
+
+                if ( !it.next().getBasicDetails()[ 1 ].toLowerCase().contains( filters[ 1 ].toLowerCase() ) )
                     it.remove();
             }
         }
@@ -83,7 +84,7 @@ public class DataHandler {
         if ( !filters[ 2 ].isEmpty() ) {
             it = filtered.iterator();
             while ( it.hasNext() ) {
-                if ( !it.next().getBasicDetails()[ 4 ].equals( filters[ 2 ] ) )
+                if ( !it.next().getBasicDetails()[ 4 ].toLowerCase().contains( filters[ 2 ].toLowerCase() ) )
                     it.remove();
             }
         }
@@ -91,7 +92,7 @@ public class DataHandler {
         if ( !filters[ 3 ].isEmpty() ) {
             it = filtered.iterator();
             while ( it.hasNext() ) {
-                if ( !it.next().getBasicDetails()[ 6 ].equals( filters[ 3 ] ) )
+                if ( !it.next().getBasicDetails()[ 6 ].toLowerCase().contains( filters[ 3 ].toLowerCase() ) )
                     it.remove();
             }
         }

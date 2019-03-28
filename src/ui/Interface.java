@@ -7,9 +7,6 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
 import java.io.File;
 
 /**
@@ -28,6 +25,9 @@ public class Interface {
     public Interface() {
         try {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+
+            // Because ProgressBar is broken on linux, which is what we're targeting,
+            // override the settings for it
         } catch ( Exception e ) {
             Out.printError( id, "There was an issue setting look and feel: " + e.getLocalizedMessage() );
         }
@@ -158,6 +158,16 @@ public class Interface {
         cc.gridwidth = 1;
         northPanel.add( btnClear, cc );
 
+        JProgressBar prgbrStatus = new JProgressBar();
+        prgbrStatus.setValue( 20 );
+        prgbrStatus.setMaximum( 100 );
+        cc.gridx = 0;
+        cc.gridy = 6;
+        cc.gridwidth = 4;
+        cc.fill = GridBagConstraints.HORIZONTAL;
+        northPanel.add( prgbrStatus, cc );
+
+
         // South Panel --------------------
         JPanel southPanel = new JPanel( new BorderLayout() );
         southPanel.setBorder( BorderFactory.createEmptyBorder( 4, 4, 4, 4 ) );
@@ -212,20 +222,26 @@ public class Interface {
         itemRefreshList.addActionListener( actionEvent -> {
             DataHandler.getInstance().reset();
             FileHandler.getInstance().processFile();
+
+            // Test to make sure btnClear is set up first. It should be.
+            // but hey, ya never know.
+
+            if ( btnClear.getActionListeners().length != 0 )
+                btnClear.doClick();
         } );
-        
+
         itemSettings.addActionListener( actionEvent -> {
-            
+
         } );
-        
+
         itemReshowSearch.addActionListener( actionEvent -> {
-            if ( formVersion == 0) {
+            if ( formVersion == 0 ) {
                 frm.remove( northPanel );
                 itemReshowSearch.setText( "Show Search / Sort" );
                 formVersion = 1;
             }
-            else if ( formVersion == 1 ){
-                frm.add( northPanel, BorderLayout.NORTH  );
+            else if ( formVersion == 1 ) {
+                frm.add( northPanel, BorderLayout.NORTH );
                 itemReshowSearch.setText( "Hide Search / Sort" );
                 formVersion = 0;
             }
@@ -242,9 +258,10 @@ public class Interface {
             toFilterBy[ 1 ] = txtName.getText();
             toFilterBy[ 2 ] = txtSteward.getText();
             toFilterBy[ 3 ] = txtSN.getText();
-
+            prgbrStatus.setValue( prgbrStatus.getValue() + 10 );
+            prgbrStatus.repaint();
             DataHandler.getInstance().refreshTable( toFilterBy );
-        });
+        } );
 
         btnClear.addActionListener( actionEvent -> {
             txtName.setText( "" );
@@ -252,9 +269,18 @@ public class Interface {
             txtSN.setText( "" );
             cbxTypes.setSelectedIndex( 0 );
             DataHandler.getInstance().refreshTable();
-        });
-        
+        } );
+
+        itemExit.addActionListener( actionEvent -> {
+            //TODO Add saving / apply changes to list
+            System.exit( 0 );
+        } );
+
         frm.setMinimumSize( new Dimension( 650, 600 ) );
+
+        // By default, try to get a list from Documents.
+        FileHandler.getInstance().getDefaultDocumentsList();
+
         frm.repaint();
     }
 
